@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <style>
+        /* .orderTable 有線框的樣式 */
+        #orderTable {
+            border-collapse: collapse;
+            border: 1px solid #000;
+        }
+
+        /* .orderTable td 有線框的樣式 */
+        #orderTable th,
+        #orderTable td {
+            padding: 5px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root" class="container">
+
+
+    </div>
+    <script type="text/babel">
+
+        // 訂單資料
+    const orderlist = [{
+        "name": "麥香雞",
+        "price": 70,
+        "count": 1,
+        isSpicy: false,
+        isServed:false
+
+    }, {
+        "name": "麥克雞塊",
+        "price": 60,
+        "count": 1,
+        isSpicy: true,
+        isServed:false
+    }, {
+        "name": "可樂",
+        "price": 30,
+        "count": 1,
+        isSpicy: false,
+        isServed:false
+    }];
+    
+    const {useState} = React;
+   
+    // 定義 App 函數組件
+    function App() {
+        // [資料,設定資料] = useState(初始值)
+        const [orders,setOrders] = useState(orderlist); // 使用 useState 創建狀態 orders
+
+        // 定義 updateOrder 函數，用於更新訂單狀態
+        function updateOrder(key){
+            const newOrders = [...orders];
+            newOrders[key].isServed = !newOrders[key].isServed;
+            setOrders(newOrders);
+    }
+        return (
+            <div>
+                <table id="orderTable">
+                    <thead>
+                        <tr>
+                            <th>餐點名稱</th>
+                            <th>價格</th>
+                            <th>數量</th>
+                            <th>辣嗎</th>
+                            <th>出餐</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            orders.map((order,key) => { // 使用 map 函數遍歷 orders 陣列
+                            return (
+                                <tr key={key} style={{background:order.isServed ?'yellow':''}}>
+                                    <td>{order.name}</td>
+                                    <td>{order.price}</td>
+                                    <td>{order.count}</td>
+                                    <td>{order.isSpicy ? "會辣" : "不會辣"}</td>
+                                    <td>{order.isServed ? "已出餐" : "未出餐"}</td>
+                                    <td><button type="button"
+                                        onClick={()=>updateOrder(key)}
+                                        >切換狀態</button></td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        )  
+    }
+    
+    // 將 App 組件掛載到指定的 DOM 元素上
+    ReactDOM.createRoot(document.querySelector('#root'))
+        .render(<App/>)
+</script>
+
+</body>
+
+</html>

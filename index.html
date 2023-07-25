@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* .orderTable 有線框的樣式 */
+        #orderTable {
+            border-collapse: collapse;
+            border: 1px solid #000;
+        }
+
+        /* .orderTable td 有線框的樣式 */
+        #orderTable th,
+        #orderTable td {
+            padding: 5px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root" class="container"></div>
+    <script>
+
+        // 訂單資料
+        const orderlist = [
+            {
+                "name": "麥香雞",
+                "price": 70,
+                "count": 1,
+                isSpicy: false,
+                isServed: false
+            },
+            {
+                "name": "麥克雞塊",
+                "price": 60,
+                "count": 1,
+                isSpicy: true,
+                isServed: false
+            },
+            {
+                "name": "可樂",
+                "price": 30,
+                "count": 1,
+                isSpicy: false,
+                isServed: false
+            }
+        ];
+
+        const root = document.getElementById('root');
+
+        // 更新訂單狀態函數
+        function updateOrder(key) {
+            const newOrders = [...orderlist];
+            newOrders[key].isServed = !newOrders[key].isServed;
+            renderOrders(newOrders);
+        }
+
+        // 渲染訂單函數
+        function renderOrders(orders) {
+            root.innerHTML = `
+                <div>
+                    <table id="orderTable">
+                        <thead>
+                            <tr>
+                                <th>餐點名稱</th>
+                                <th>價格</th>
+                                <th>數量</th>
+                                <th>辣嗎</th>
+                                <th>出餐</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${orders.map((order, key) => `
+                                <tr key="${key}" style="background:${order.isServed ? 'yellow' : ''}">
+                                    <td>${order.name}</td>
+                                    <td>${order.price}</td>
+                                    <td>${order.count}</td>
+                                    <td>${order.isSpicy ? "會辣" : "不會辣"}</td>
+                                    <td>${order.isServed ? "已出餐" : "未出餐"}</td>
+                                    <td><button type="button" data-key="${key}">切換狀態</button></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            // 為按鈕元素添加點擊事件監聽器
+            const buttons = root.querySelectorAll('button');
+            buttons.forEach(button => {
+                const key = button.dataset.key;
+                button.addEventListener('click', () => updateOrder(key));
+            });
+        }
+
+        renderOrders(orderlist);
+    </script>
+</body>
+
+</html>
